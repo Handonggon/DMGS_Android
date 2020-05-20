@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/title_login"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <RelativeLayout
+            android:id="@+id/bt_back_layout"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true" >
+
+            <ImageButton
+                android:id="@+id/bt_back"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/title_back"
+                android:scaleType="fitCenter"
+                android:onClick="onBack"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/bt_back_layout"
+            android:layout_marginStart="5dp"
+            android:layout_centerVertical="true"
+            android:text="@string/login_str"
+            android:textSize="24sp"
+            android:fontFamily="@font/m_gothic_extrabold"/>
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/menubar"
+        android:layout_below="@id/title_login"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_login"
+        android:layout_marginTop="20dp">
+
+        <LinearLayout
+            android:id="@+id/layout_login_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="15dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/name_str"
+                android:textSize="20sp"
+                android:fontFamily="@font/m_gothic_bold"/>
+
+            <EditText
+                android:hint="@string/name_hint_str"
+                android:id="@+id/et_login_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_gravity="center_vertical"
+                android:textSize="16sp"
+                android:inputType="text"
+                android:background="@drawable/custom_edittext"
+                android:fontFamily="@font/m_gothic_normal" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_login_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_login_name"
+            android:orientation="horizontal"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/number_str"
+                android:textSize="20sp"
+                android:fontFamily="@font/m_gothic_bold" />
+
+                <Spinner
+                    android:id="@+id/sp_login_number_0"
+                    android:layout_width="60dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_gravity="center_vertical"
+                    android:spinnerMode="dropdown"
+                    android:entries="@array/number_head"
+                    android:textSize="16sp"
+                    android:background="@drawable/spinner_background"
+                    android:fontFamily="@font/m_gothic_normal"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/hyphen"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/m_gothic_bold"/>
+                <EditText
+                    android:id="@+id/et_login_number_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_gravity="center_vertical"
+                    android:textColorHint="@color/hintText"
+                    android:textSize="16sp"
+                    android:inputType="number"
+                    android:maxLength="8"
+                    android:background="@drawable/custom_edittext"
+                    android:fontFamily="@font/m_gothic_normal"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/bt_login"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@id/layout_login_number"
+            android:text="@string/login_str"
+            android:onClick="onClick"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="10dp"
+            android:textSize="18sp"
+            android:textColor="@color/focusText"
+            android:fontFamily="@font/m_gothic_bold"
+            android:background="@drawable/custom_button"
+            style="?android:attr/borderlessButtonStyle"/>
+
+        <Button
+            android:id="@+id/bt_registration"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@id/bt_login"
+            android:text="@string/registration_str"
+            android:onClick="onClick"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:textSize="14sp"
+            android:textColor="@color/unfocusText"
+            android:fontFamily="@font/m_gothic_bold"
+            android:background="@drawable/custom_button"
+            style="?android:attr/borderlessButtonStyle"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

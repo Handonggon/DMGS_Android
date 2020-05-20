@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sl="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/title_normal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <RelativeLayout
+            android:id="@+id/bt_back_layout"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true" >
+
+            <ImageButton
+                android:id="@+id/bt_back"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/title_back"
+                android:scaleType="fitCenter"
+                android:onClick="onBack"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/bt_back_layout"
+            android:layout_marginStart="5dp"
+            android:layout_centerVertical="true"
+            android:text="@string/map_str"
+            android:textSize="24sp"
+            android:fontFamily="@font/m_gothic_extrabold" />
+
+        <Button
+            android:id="@+id/TimeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_centerHorizontal="true"
+            android:text="Time"
+            android:textColor="@color/white"
+            android:background="@drawable/round_button"
+            android:onClick="timeOn"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="50dp"
+            android:background="@drawable/tutorial"
+            android:onClick="onTutorial" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/check"
+            android:onClick="onCheck" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/menu_normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_normal" >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/menubar" />
+
+        <TableLayout
+            android:id="@+id/category"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:stretchColumns="1">
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:layout_weight="1">
+                    <ImageButton
+                        android:id="@+id/in_exhibition"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/in_exhibition_off"
+                        android:onClick="onIn_exhibition" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:layout_weight="1">
+                    <ImageButton
+                        android:id="@+id/out_exhibition"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/out_exhibition_off"
+                        android:onClick="onOut_exhibition"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:layout_weight="1">
+                    <ImageButton
+                        android:id="@+id/facilities"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/facilities_off"
+                        android:onClick="onFacilities"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:layout_weight="1">
+                    <ImageButton
+                        android:id="@+id/store"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/store_off"
+                        android:onClick="onStore"/>
+                </RelativeLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:layout_weight="1">
+
+                    <ImageButton
+                        android:id="@+id/list"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/list_off"
+                        android:onClick="onList"/>
+
+                    <TextView
+                        android:id="@+id/list_count_tv"
+                        android:background="@drawable/round_tv"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:visibility="invisible"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/m_gothic_bold"
+                        android:textColor="#FFFFFF"
+                        android:gravity="center"/>
+                </FrameLayout>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_in_exhibition"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="전시관"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/m_gothic_bold"
+                    android:textColor="#000000">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_out_exhibition"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="야외전시"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/m_gothic_bold"
+                    android:textColor="#000000">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_facilities"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="편의시설"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/m_gothic_bold"
+                    android:textColor="#000000">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_store"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="판매시설"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/m_gothic_bold"
+                    android:textColor="#000000">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_list"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="관람확인"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/m_gothic_bold"
+                    android:textColor="#000000">
+                </TextView>
+            </TableRow>
+        </TableLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/content_normal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="2dp"
+        android:orientation="horizontal"
+        android:layout_below="@id/menu_normal">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/menubar" />
+
+        <RelativeLayout
+            android:id="@+id/map_view"
+            android:layout_marginTop="1dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/questList"
+            android:layout_marginTop="1dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible">
+        </ListView>
+
+        <ImageButton
+            android:id="@+id/but_gps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gps_off"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="20dp"
+            android:onClick="onLocation" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

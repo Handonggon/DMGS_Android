@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout android:id="@+id/layout_main"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <!-- 메인 화면 레이아웃 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark">
+
+        <ImageView
+            android:id="@+id/logo_image"
+            android:layout_width="165dp"
+            android:layout_height="93dp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:scaleType="fitCenter"
+            android:background="@drawable/logo_loding"/>
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:layout_below="@+id/logo_image"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:fontFamily="@font/m_gothic_bold"
+            android:text="초기화중 입니다."
+            android:textSize="15sp"
+            android:textColor="#FFF">
+        </TextView>
+
+        <ImageView
+            android:id="@+id/lodingImg"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/text"
+            android:layout_centerHorizontal="true"
+            android:scaleType="fitCenter"
+            android:layout_height="50dp"
+            android:layout_width="50dp" />
+
+    </RelativeLayout>
+</android.support.v4.widget.DrawerLayout>

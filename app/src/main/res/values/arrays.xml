@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="phone_head">
+        <item>010</item>
+        <item>011</item>
+        <item>016</item>
+        <item>017</item>
+        <item>018</item>
+        <item>019</item>
+    </string-array>
+
+    <string-array name="number_head">
+        <item>19</item>
+        <item>18</item>
+        <item>17</item>
+        <item>16</item>
+    </string-array>
+
+    <string-array name="division_head">
+        <item>육군</item>
+        <item>해군</item>
+        <item>공군</item>
+        <item>해병대</item>
+    </string-array>
+
+    <string-array name="participation_head">
+        <item>일반 관람</item>
+        <item>해설 관람</item>
+    </string-array>
+
+    <string-array name="explanation_head">
+        <item>시간</item>
+        <item>11:00</item>
+        <item>13:00</item>
+    </string-array>
+</resources>
