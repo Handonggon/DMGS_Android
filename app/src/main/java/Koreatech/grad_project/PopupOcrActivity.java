@@ -30,7 +30,7 @@ public class PopupOcrActivity extends Activity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_apply :
-                Intent intent = new Intent(PopupOcrActivity.this, OcrActivity.class);
+                Intent intent = new Intent(PopupOcrActivity.this, CameraActivity.class);
                 startActivityForResult(intent, 0);
                 break;
             case R.id.bt_cancel :

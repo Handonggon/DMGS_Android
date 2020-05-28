@@ -47,7 +47,6 @@ public class CompareActivity extends AppCompatActivity implements CameraBridgeVi
     private Mat matResult;
     private long mLastClickTime = 0;
 
-    public native void ConvertRGBtoGray(long matAddrInput, long matAddrResult);
     public native int imageprocessing(long objectImage, long sceneImage);
 
     static {
@@ -164,15 +163,7 @@ public class CompareActivity extends AppCompatActivity implements CameraBridgeVi
         if ( matResult == null )
             matResult = new Mat(matInput.rows(), matInput.cols(), matInput.type());
 
-        ConvertRGBtoGray(matInput.getNativeObjAddr(), matResult.getNativeObjAddr());
-
         return matResult;
-    }
-
-    public void test() {
-
-        Imgproc.line(matResult, new Point(100, 100), new Point(400, 400), new Scalar(0, 0, 255), 2);
-        Log.d("test", "11111111111");
     }
 
     private class FeatureComparingTask extends AsyncTask<Mat, Void, Integer> {

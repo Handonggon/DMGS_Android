@@ -1,19 +1,24 @@
 package Koreatech.grad_project;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.SurfaceView;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
@@ -30,13 +35,9 @@ import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 
-import org.opencv.android.BaseLoaderCallback;
-import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.LoaderCallbackInterface;
-import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -44,39 +45,26 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.Semaphore;
 
-public class OcrActivity  extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
+public class OCRActivity extends AppCompatActivity {
+    private static final String TAG = OCRActivity.class.getSimpleName();
+    private static final String CLOUD_VISION_API_KEY = "AIzaSyBJOufGbigq1Q6Tbc7inGX_CyrrG9Jozfk";
+    private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
+    private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
+    private static final int MAX_LABEL_RESULTS = 10;
 
-    private CameraBridgeViewBase mOpenCvCameraView;
-    private Mat matInput;
-    private Mat matResult;
-    private long mLastClickTime = 0;
+    private Button bt_apply, bt_cancel;
+    CustomView customView;
 
-    ImageView imageVIewScene;
+    private Bitmap bitmap;
+    private int[] rect = new int[8];
 
-    public native void ConvertRGBtoGray(long matAddrInput, long matAddrResult);
-    public native void warp(long input_mat);
-    public native void ROI(long input_mat);
+    public native void warp(long input_mat, int[] rect);
 
     static {
         System.loadLibrary("opencv_java4");
         System.loadLibrary("native-lib");
     }
-
-    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
-        @Override
-        public void onManagerConnected(int status) {
-            switch (status) {
-                case LoaderCallbackInterface.SUCCESS: {
-                    mOpenCvCameraView.enableView();
-                } break;
-                default: {
-                    super.onManagerConnected(status);
-                } break;
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,98 +78,38 @@ public class OcrActivity  extends AppCompatActivity implements CameraBridgeViewB
             actionBar.hide();
         }
 
-        imageVIewScene = findViewById(R.id.img);
-
-        mOpenCvCameraView = findViewById(R.id.activity_surface_view);
-        mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
-        mOpenCvCameraView.setCvCameraViewListener(this);
-        mOpenCvCameraView.setCameraIndex(0); // froremoveVient-camera(1),  back-camera(0)
-        mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
-
-        ImageButton shutter = findViewById(R.id.button_capture);
-        shutter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 10000){
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-
-                warp(matInput.getNativeObjAddr());
-                Bitmap warp = Bitmap.createBitmap(matInput.width(), matInput.height(), Bitmap.Config.ARGB_8888);
-                ConvertRGBtoGray(matInput.getNativeObjAddr(), matInput.getNativeObjAddr());
-                Utils.matToBitmap(matInput, warp);
-
-
-                /*90도 회전*/
-                Matrix matrix = new Matrix();
-                matrix.postRotate(90);
-                Bitmap rotated = Bitmap.createBitmap(warp, 0, 0, warp.getWidth(), warp.getHeight(), matrix, true);
-
-                imageVIewScene.setImageBitmap(rotated);
-                callCloudVision(rotated);
-            }
-        });
+        bt_apply = findViewById(R.id.bt_apply);
+        bt_cancel = findViewById(R.id.bt_cancel);
+        customView = findViewById(R.id.canvas);
+        bitmap = CameraActivity.bitmap;
+        customView.setLayoutParams(new RelativeLayout.LayoutParams(bitmap.getWidth(), bitmap.getHeight()));
     }
 
-    @Override
-    public void onPause()
-    {
-        super.onPause();
-        if (mOpenCvCameraView != null)
-            mOpenCvCameraView.disableView();
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-
-        if (!OpenCVLoader.initDebug()) {
-            Log.d(TAG, "onResume :: Internal OpenCV library not found.");
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_2_0, this, mLoaderCallback);
-        } else {
-            Log.d(TAG, "onResum :: OpenCV library found inside package. Using it!");
-            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.bt_apply :
+                bitmap = customView.bitmap;
+                rect[0] = (int)customView.points[0].x;
+                rect[1] = (int)customView.points[0].y;
+                rect[2] = (int)customView.points[3].x;
+                rect[3] = (int)customView.points[3].y;
+                rect[4] = (int)customView.points[1].x;
+                rect[5] = (int)customView.points[1].y;
+                rect[6] = (int)customView.points[2].x;
+                rect[7] = (int)customView.points[2].y;
+                Mat input = new Mat();
+                Utils.bitmapToMat(bitmap, input);
+                warp(input.getNativeObjAddr(), rect);
+                Utils.matToBitmap(input, bitmap);
+                customView.setImageBitmap(bitmap);
+                callCloudVision(bitmap);
+                break;
+            case R.id.bt_cancel :
+                setResult(RESULT_CANCELED);
+                finish();
+                break;
         }
     }
-
-    public void onDestroy() {
-        super.onDestroy();
-
-        if (mOpenCvCameraView != null)
-            mOpenCvCameraView.disableView();
-    }
-
-
-    @Override
-    public void onCameraViewStarted(int width, int height) {
-
-    }
-
-    @Override
-    public void onCameraViewStopped() {
-
-    }
-
-    @Override
-    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        matInput = inputFrame.rgba();
-
-        matResult = new Mat(matInput.rows(), matInput.cols(), CvType.CV_32FC2);
-        matResult = matInput.clone();
-        //ConvertRGBtoGray(matInput.getNativeObjAddr(), matResult.getNativeObjAddr());
-
-        ROI(matResult.getNativeObjAddr());
-
-        return matResult;
-    }
-
-    private static final String CLOUD_VISION_API_KEY = "AIzaSyC5ilTz6H2zJCkC4joiZnW2T7IDouhmZwY";
-    private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
-    private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
-    private static final int MAX_LABEL_RESULTS = 10;
-    private static final String TAG = OcrActivity.class.getSimpleName();
 
     private void callCloudVision(final Bitmap bitmap) {
         // Do the real work in an async task, because we need to use the network anyway
@@ -194,11 +122,11 @@ public class OcrActivity  extends AppCompatActivity implements CameraBridgeViewB
     }
 
     private class TextDetectionTask extends AsyncTask<Object, Void, String> {
-        private final WeakReference<OcrActivity> mActivityWeakReference;
+        private final WeakReference<OCRActivity> mActivityWeakReference;
         private Vision.Images.Annotate mRequest;
-        ProgressDialog asyncDialog = new ProgressDialog(OcrActivity.this);
+        ProgressDialog asyncDialog = new ProgressDialog(OCRActivity.this);
 
-        TextDetectionTask(OcrActivity activity, Vision.Images.Annotate annotate) {
+        TextDetectionTask(OCRActivity activity, Vision.Images.Annotate annotate) {
             mActivityWeakReference = new WeakReference<>(activity);
             mRequest = annotate;
         }
@@ -232,12 +160,11 @@ public class OcrActivity  extends AppCompatActivity implements CameraBridgeViewB
         @Override
         protected void onPostExecute(String result) {
             asyncDialog.dismiss();
-            OcrActivity activity = mActivityWeakReference.get();
+            OCRActivity activity = mActivityWeakReference.get();
             if (activity != null && !activity.isFinishing()) {
-                Intent intent = new Intent(OcrActivity.this, RegistActivity.class);
+                Intent intent = new Intent(OCRActivity.this, RegistActivity.class);
                 intent.putExtra("result", result);
                 setResult(RESULT_OK, intent);
-
                 finish();
             }
         }

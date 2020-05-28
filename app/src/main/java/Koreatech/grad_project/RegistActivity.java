@@ -444,13 +444,15 @@ public class RegistActivity extends AppCompatActivity {
                     }
 
                     for (int i = 0; i < results.size(); i++) {
-                        if(hangul.jasoEqual(hangul.hangulToJaso(results.get(i)), hangul.hangulToJaso("성명"))) {
+                        if(hangul.jasoEqual(hangul.hangulToJaso(results.get(i)), hangul.hangulToJaso("성명")) ||
+                                hangul.jasoEqual(hangul.hangulToJaso(results.get(i)), hangul.hangulToJaso("성 명"))) {
                             et_name.setText(results.get(i+1));
                             break;
                         }
                     }
                     for (int i = 0; i < results.size(); i++) {
-                        if(hangul.jasoEqual(hangul.hangulToJaso(results.get(i)), hangul.hangulToJaso("군번"))) {
+                        if(hangul.jasoEqual(hangul.hangulToJaso(results.get(i)), hangul.hangulToJaso("군번")) ||
+                                hangul.jasoEqual(hangul.hangulToJaso(results.get(i)), hangul.hangulToJaso("군 번"))) {
                             try {
                                 String temp_num[] = results.get(i + 1).split("-");
                                 boolean is_success_sp = false;
@@ -469,13 +471,16 @@ public class RegistActivity extends AppCompatActivity {
                         }
                     }
                     for (int i = 0; i < results.size(); i++) {
-                        if(hangul.jasoEqual(hangul.hangulToJaso(results.get(i)), hangul.hangulToJaso("행선"))) {
+                        if(hangul.jasoEqual(hangul.hangulToJaso(results.get(i)), hangul.hangulToJaso("행선")) ||
+                                hangul.jasoEqual(hangul.hangulToJaso(results.get(i)), hangul.hangulToJaso("행 선")) ||
+                                hangul.jasoEqual(hangul.hangulToJaso(results.get(i)), hangul.hangulToJaso("행선지"))) {
                             et_destination.setText(results.get(i+1));
                             break;
                         }
                     }
                     for (int i = 0; i < results.size(); i++) {
-                        if(hangul.jasoEqual(hangul.hangulToJaso(results.get(i)), hangul.hangulToJaso("소속"))) {
+                        if(hangul.jasoEqual(hangul.hangulToJaso(results.get(i)), hangul.hangulToJaso("소속")) ||
+                                hangul.jasoEqual(hangul.hangulToJaso(results.get(i)), hangul.hangulToJaso("소 속"))) {
                             et_temper.setText(results.get(i+1));
                             break;
                         }

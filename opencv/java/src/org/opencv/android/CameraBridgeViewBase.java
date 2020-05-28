@@ -533,8 +533,8 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
 
             if (width <= maxAllowedWidth && height <= maxAllowedHeight) {
                 if (width >= calcWidth && height >= calcHeight) {
-                    calcWidth = (int) width;
-                    calcHeight = (int) height;
+                    calcWidth = (int) 1920;
+                    calcHeight = (int) 1080;
                 }
             }
         }
