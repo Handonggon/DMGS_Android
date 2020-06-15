@@ -33,6 +33,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class CompareActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
     private SharedPreferences infoData;
@@ -41,6 +42,8 @@ public class CompareActivity extends AppCompatActivity implements CameraBridgeVi
     private int exhibitionNum;
     /*SharedPreferences로 받아오는 값들*/
     private Bitmap exhibitImg;
+
+    private final ReentrantLock locker = new ReentrantLock();
 
     private CameraBridgeViewBase mOpenCvCameraView;
     private Mat matInput;
@@ -109,13 +112,13 @@ public class CompareActivity extends AppCompatActivity implements CameraBridgeVi
         shutter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 10000){
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 10000 || matInput == null){
                     return;
                 }
                 mLastClickTime = SystemClock.elapsedRealtime();
 
                 AsyncTask<Mat, Void, Integer> task = new FeatureComparingTask();
-                task.execute(matResult);
+                task.execute(matInput);
             }
         });
     }
@@ -158,16 +161,17 @@ public class CompareActivity extends AppCompatActivity implements CameraBridgeVi
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        matInput = inputFrame.rgba();
-
-        if ( matResult == null )
-            matResult = new Mat(matInput.rows(), matInput.cols(), matInput.type());
-
+        matResult = inputFrame.rgba();
+        locker.lock();
+        if( matResult != null) {
+            matInput = matResult.clone();
+        }
+        locker.unlock();
         return matResult;
     }
 
     private class FeatureComparingTask extends AsyncTask<Mat, Void, Integer> {
-        private final static int MIN_CORRECT_NUM = 20;
+        private final static int MIN_CORRECT_NUM = 10;
         private WeakReference<CompareActivity> mActivityWeakReference;
         private ProgressDialog asyncDialog = new ProgressDialog(CompareActivity.this);
 

@@ -14,7 +14,7 @@
 using namespace cv;
 using namespace std;
 
-const float RATIO = 0.65f;
+const float RATIO = 0.75f;
 
 struct ORBDetector {
     Ptr<Feature2D> orb;
@@ -26,16 +26,6 @@ struct ORBDetector {
     void operator()(const T& in, const T& mask, std::vector<KeyPoint>& pts, T& descriptors, bool useProvided = false)
     {
         orb->detectAndCompute(in, mask, pts, descriptors, useProvided);
-    }
-};
-struct ORBMatcher {
-    Ptr<BFMatcher> matcher;
-    ORBMatcher() {
-        matcher = BFMatcher::create(NORM_HAMMING);
-    }
-    template<class T>
-    void operator()(const T &in1, const T &in2, std::vector<std::vector<DMatch>>& pts, int k) {
-        matcher->knnMatch(in1, in2, pts, k);
     }
 };
 
@@ -158,8 +148,8 @@ Java_Koreatech_grad_1project_CameraActivity_ROI(JNIEnv *env, jobject thiz, jlong
 extern "C"
 JNIEXPORT jint JNICALL
 Java_Koreatech_grad_1project_CompareActivity_imageprocessing(JNIEnv *env, jobject thiz,
-                                                              jlong object_image,
-                                                              jlong scene_image) {
+                                                             jlong object_image,
+                                                             jlong scene_image) {
     ocl::setUseOpenCL(true);
 
     UMat img1, img2;
@@ -176,7 +166,6 @@ Java_Koreatech_grad_1project_CompareActivity_imageprocessing(JNIEnv *env, jobjec
     cvtColor( img1, img1, COLOR_RGBA2GRAY);
     cvtColor( img2, img2, COLOR_RGBA2GRAY);
 
-    //declare input/output
     std::vector<KeyPoint> keypoints1, keypoints2;
     std::vector<std::vector<DMatch>> matches;
 
@@ -184,33 +173,22 @@ Java_Koreatech_grad_1project_CompareActivity_imageprocessing(JNIEnv *env, jobjec
     Mat descriptors1 = _descriptors1.getMat(ACCESS_RW),
             descriptors2 = _descriptors2.getMat(ACCESS_RW);
 
-    //instantiate detectors/matchers
     ORBDetector orb;
-    ORBMatcher matcher;
+    Ptr<BFMatcher> matcher = BFMatcher::create(NORM_HAMMING);
 
     orb(img2.getMat(ACCESS_READ), Mat(), keypoints1, descriptors1);
     orb(img1.getMat(ACCESS_READ), Mat(), keypoints2, descriptors2);
-    if(keypoints1.size() == 0 || keypoints2.size() == 0) {
-        return -1;
-    }
-    matcher(descriptors1, descriptors2, matches, 2);
+    if(keypoints1.empty() || keypoints2.empty()) { return -1; }
 
-    if(matches.size() == 0) {
-        return -1;
-    }
-    __android_log_print(ANDROID_LOG_DEBUG, "native-lib :: ",
-                        "%d keypoints on object image", keypoints1.size());
-    __android_log_print(ANDROID_LOG_DEBUG, "native-lib :: ",
-                        "%d keypoints on scene image", keypoints2.size());
-    __android_log_print(ANDROID_LOG_DEBUG, "native-lib :: ",
-                        "%d matches on scene image", matches.size());
+    matcher->knnMatch(descriptors1, descriptors2, matches, 2);
 
-    std::vector<DMatch> good_matches;
+    if(matches.empty()) { return -1;}
+
+    vector<DMatch> good_matches;
     for (int i = 0; i < matches.size(); i++) {
-        if(matches[i].size() == 2 && matches[i][0].distance <= matches[i][1].distance * RATIO) {
+        if(matches[i][0].distance < matches[i][1].distance * RATIO) {
             good_matches.push_back(matches[i][0]);
         }
     }
-
     return good_matches.size();
 }
